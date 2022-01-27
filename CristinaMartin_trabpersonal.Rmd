@@ -19,56 +19,57 @@ vuelos <- nycflights13::flights
 #### 1. Encuentra todos los vuelos que llegaron más de una hora tarde de lo previsto.
 
 ```{r}
-
+filter(vuelos, arr_delay >= 60)
 ```
 
 
 #### 2. Encuentra todos los vuelos que volaron hacia San Francisco (aeropuertos SFO y OAK).
 
 ```{r}
-
+filter(vuelos, dest == "SFO" | dest == "OAK")
 ```
 
 
 #### 3.  Encuentra todos los vuelos operados por United American (UA) o por American Airlines (AA).
 
 ```{r}
-
+filter(vuelos, carrier == "UA" | carrier == "AA")
 ```
 
 
 #### 4. Encuentra todos los vuelos que salieron en los meses de primavera (Abril, Mayo y Junio)
 
 ```{r}
-
+filter(vuelos, month == 4 | month == 5 | month == 6)
 ```
 
 
 #### 5. Encuentra todos los vuelos que llegaron más de una hora tarde pero salieron con menos de una hora de retraso.
 
 ```{r}
-
+filter(vuelos, arr_delay >= 60 & dep_delay <= 60)
 ```
 
 
 #### 6. Encuentra todos los vuelos que salieron con más de una hora de retraso pero consiguieron llegar con menos de 30 minutos de retraso (el avión aceleró en el aire)
 
 ```{r}
-
+filter(vuelos, dep_delay >= 60 & arr_delay <= 30)
 ```
 
 
 #### 7. Encuentra todos los vuelos que salen entre medianoche y las 7 de la mañana (vuelos nocturnos).
 
 ```{r}
-
+filter(vuelos, dep_time == 0:700)
 ```
 
 
 #### 8. ¿Cuántos vuelos tienen un valor desconocido de dep_time?
 
 ```{r}
-
+a <- which(is.na(vuelos$dep_time))
+length(a)
 ```
 
 
