@@ -175,9 +175,41 @@ Con el gráfico obtenido no podemos afirmar que exista una relacion directa entr
 #### 18. Investiga si la proporción de vuelos cancelados está relacionada con el retraso promedio por aeropuerto en los vuelos.
 
 ```{r}
+LGA <- filter(vuelos, origin=="LGA")
 
+Prop_retraso_cancel <- 
+  LGA %>%
+  mutate(cancelados = (is.na(tailnum))) %>%
+  group_by(origin, dest) %>%
+  summarise(prop_cancelados = mean(cancelados),med_dep_delay = mean(dep_delay, na.rm = TRUE),med_arr_delay = mean(arr_delay, na.rm = TRUE)) %>% ungroup()
+
+ggplot(Prop_retraso_cancel) +
+  geom_line(aes(x = med_dep_delay, y = prop_cancelados, col= prop_cancelados))
+
+JFK <- filter(vuelos, origin=="JFK")
+
+Prop_retraso_cancel <- 
+  JFK %>%
+  mutate(cancelados = (is.na(tailnum))) %>%
+  group_by(origin, dest) %>%
+  summarise(prop_cancelados = mean(cancelados),med_dep_delay = mean(dep_delay, na.rm = TRUE),med_arr_delay = mean(arr_delay, na.rm = TRUE)) %>% ungroup()
+
+ggplot(Prop_retraso_cancel) +
+  geom_line(aes(x = med_dep_delay, y = prop_cancelados, col= prop_cancelados))
+
+EWR <- filter(vuelos, origin=="EWR")
+
+Prop_retraso_cancel <- 
+  EWR %>%
+  mutate(cancelados = (is.na(tailnum))) %>%
+  group_by(origin, dest) %>%
+  summarise(prop_cancelados = mean(cancelados),med_dep_delay = mean(dep_delay, na.rm = TRUE),med_arr_delay = mean(arr_delay, na.rm = TRUE)) %>% ungroup()
+
+ggplot(Prop_retraso_cancel) +
+  geom_line(aes(x = med_dep_delay, y = prop_cancelados, col= prop_cancelados))
 ```
 
+Se observa una relación entre el número de vuelos cancelados y la media del tiempo de retraso en el aeropuerto JFK, pero para los otros dos aeropuertos no podemos afirmar lo mismo con las graficas obtenidas.
 
 #### 19. ¿Qué compañía aérea sufre los peores retrasos?
 
@@ -253,14 +285,29 @@ retraso_total_vuelos
 #### 23. Para cada uno de ellos, calcula la proporción del total de retraso para dicho destino.
 
 ```{r}
-
+vuelos %>%
+   filter(arr_delay > 0) %>%
+   group_by(dest, origin, carrier, flight) %>%
+   summarise(arr_delay = sum(arr_delay)) %>%
+   group_by(dest) %>%
+   mutate(
+     arr_delay_prop = arr_delay / sum(arr_delay)
+   ) %>%
+   arrange(dest, desc(arr_delay_prop)) %>%
+   select(carrier, flight, origin, dest, arr_delay_prop) 
 ```
 
 
 #### 24. Es hora de aplicar todo lo que hemos aprendido para visualizar mejor los tiempos de salida para vuelos cancelados vs los no cancelados. Recuerda bien qué tipo de dato tenemos en cada caso. ¿Qué deduces acerca de los retrasos según la hora del día a la que está programada el vuelo de salida?
 
 ```{r}
-
+vuelos_dt %>%
+  mutate(sched_dep_hour = hour(sched_dep_time)) %>%
+  group_by(sched_dep_hour) %>%
+  summarise(dep_delay = mean(dep_delay)) %>%
+  ggplot(aes(y = dep_delay, x = sched_dep_hour)) +
+  geom_point() +
+  geom_smooth()
 ```
 
 
@@ -274,6 +321,6 @@ retraso_total_vuelos
 #### 26. Al finalizar el documento agrega el comando sessionInfo()
 
 ```{r}
-
+sessionInfo()
 ```
 
