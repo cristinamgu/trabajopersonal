@@ -313,10 +313,7 @@ vuelos_dt %>%
 
 #### 25.Subir la carpeta a github y facilitar la url.
 
-```{r}
-
-```
-
+https://github.com/cristinamgu/trabajopersonal.git
 
 #### 26. Al finalizar el documento agrega el comando sessionInfo()
 
